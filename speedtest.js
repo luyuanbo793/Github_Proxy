@@ -1,7 +1,8 @@
 // LeanCloud 初始化
 AV.init({
   appId: "inEQ7b8BcXapBBKgw6Eb1XCl-MdYXbMMI",
-  appKey: "IsMy7Ih2BImqoa9RzxzwG8gB"
+  appKey: "IsMy7Ih2BImqoa9RzxzwG8gB",
+  serverURLs: "https://ineq7b8b.api.lncldglobal.com"
 });
 
 // 更新访问计数
