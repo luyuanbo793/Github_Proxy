@@ -372,4 +372,9 @@ body {
 .test-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+#testProgress {
+  color: #666;
+  font-size: 14px;
 } 

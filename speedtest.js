@@ -59,81 +59,89 @@ const proxyNodes = [
   'mirror.ghproxy.com'
 ];
 
-// 测试单个节点速度
+// 测试单个节点的延迟
 async function testNode(node) {
   const startTime = Date.now();
   try {
-    const response = await fetch(`https://${node}/`);
-    if (response.ok) {
-      const endTime = Date.now();
-      return {
-        node,
-        latency: endTime - startTime,
-        status: '成功'
-      };
-    }
+    const response = await fetch(`https://${node}`, {
+      mode: 'no-cors',  // 由于跨域限制，使用no-cors模式
+      timeout: 5000     // 5秒超时
+    });
+    const endTime = Date.now();
+    return {
+      node: node,
+      latency: endTime - startTime,
+      status: 'success'
+    };
   } catch (error) {
-    console.error(`测试节点 ${node} 失败:`, error);
+    return {
+      node: node,
+      latency: 99999,  // 失败时设置一个很大的延迟值
+      status: 'failed'
+    };
   }
-  return {
-    node,
-    latency: Infinity,
-    status: '失败'
-  };
 }
 
 // 测试所有节点
 async function testAllNodes() {
-  const select = document.getElementById('proxySelect');
-  const testBtn = document.querySelector('.test-btn');
-  testBtn.disabled = true;
-  testBtn.textContent = '测速中...';
+  const progressSpan = document.getElementById('testProgress');
+  const testButton = document.querySelector('.test-btn');
+  const originalButtonText = testButton.textContent;
   
-  const results = [];
-  for (const node of proxyNodes) {
-    const result = await testNode(node);
-    results.push(result);
-    // 实时更新下拉框
-    select.innerHTML = results.map(r => `
-      <option value="${r.node}">${r.node} - ${r.status === '成功' ? r.latency + 'ms' : '失败'}</option>
-    `).join('') + proxyNodes.slice(results.length).map(n => `
-      <option value="${n}">${n} - 等待测速...</option>
-    `).join('');
-  }
-  
-  // 排序并更新最终结果
-  const sortedResults = results.sort((a, b) => a.latency - b.latency);
-  select.innerHTML = sortedResults.map(result => `
-    <option value="${result.node}">${result.node} - ${result.status === '成功' ? result.latency + 'ms' : '失败'}</option>
-  `).join('');
-  
-  // 自动选择最快的节点
-  const fastestNode = sortedResults.find(r => r.status === '成功');
-  if (fastestNode) {
-    select.value = fastestNode.node;
-    const notice = document.createElement('div');
-    notice.className = 'speed-notice';
-    notice.textContent = `已自动选择最快节点: ${fastestNode.node} (${fastestNode.latency}ms)`;
-    select.parentNode.appendChild(notice);
+  try {
+    testButton.disabled = true;  // 测试时禁用按钮
     
-    // 3秒后移除提示
-    setTimeout(() => notice.remove(), 3000);
+    // 并行测试所有节点，但添加进度追踪
+    let completedTests = 0;
+    const totalTests = proxyNodes.length;
+    
+    const promises = proxyNodes.map(node => 
+      testNode(node).then(result => {
+        completedTests++;
+        const progress = Math.round((completedTests / totalTests) * 100);
+        progressSpan.textContent = `测试中... ${progress}%`;
+        return result;
+      })
+    );
+    
+    const results = await Promise.all(promises);
+    
+    // 按延迟排序
+    const sortedResults = results.sort((a, b) => a.latency - b.latency);
+    
+    progressSpan.textContent = '测试完成';
+    setTimeout(() => {
+      progressSpan.textContent = '';  // 2秒后清除"测试完成"文字
+    }, 2000);
+    
+    return sortedResults;
+  } catch (error) {
+    progressSpan.textContent = '测试失败';
+    console.error('测试出错:', error);
+    return [];
+  } finally {
+    testButton.disabled = false;  // 恢复按钮可用状态
   }
-  
-  testBtn.disabled = false;
-  testBtn.textContent = '在线节点检测';
-  
-  return sortedResults;
 }
 
-// 页面加载时自动测速
+// 修改页面加载时的处理代码
 window.onload = async () => {
+  const results = await testAllNodes();
   const select = document.getElementById('proxySelect');
-  // 先填充所有节点
-  select.innerHTML = proxyNodes.map(node => `
-    <option value="${node}">${node}</option>
+  select.innerHTML = results.map(result => `
+    <option value="${result.node}">${result.node} - ${result.latency}ms</option>
   `).join('');
-  
-  // 然后进行测速
-  await testAllNodes();
 };
+
+// 修改测试按钮点击事件处理
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('test-btn')) {
+    testAllNodes().then(results => {
+      const select = document.getElementById('proxySelect');
+      select.innerHTML = results.map(result => `
+        <option value="${result.node}">${result.node} - ${result.latency}ms</option>
+      `).join('');
+    });
+  }
+  // ... 其他代码保持不变
+});

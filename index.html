@@ -16,11 +16,7 @@
            target="_blank">
           Hosts
         </a>
-        <a href="https://github.com/Eternity-Sky/Github_Proxy/issues"
-           class="reaction-btn"
-           target="_blank">
-          反馈
-        </a>
+        <button class="reaction-btn">反馈</button>
       </div>
     </div>
 
@@ -32,14 +28,10 @@
     <div class="select-group">
       <label>加速源:</label>
       <select id="proxySelect">
-        <option value="gh.tryxd.cn">gh.tryxd.cn</option>
-        <option value="gitproxy.click">gitproxy.click</option>
-        <option value="blfrp.cn">blfrp.cn</option>
-        <option value="gh-proxy.ygxz.in">gh-proxy.ygxz.in</option>
-        <option value="ghp.keleyaa.com">ghp.keleyaa.com</option>
-        <!-- ... 其他节点 ... -->
+        <!-- 节点将通过 JavaScript 动态加载 -->
       </select>
       <button class="test-btn">在线节点检测</button>
+      <span id="testProgress" style="margin-left: 10px;"></span>
     </div>
 
     <div class="notice">
@@ -81,27 +73,100 @@
         </li>
       </ul>
     </div>
+  </div>
 
-    <div class="footer">
-      <div class="footer-content">
-        <div class="copyright">
-          © 2024 Eternity-sky. All rights reserved.
-        </div>
-        <a href="https://github.com/Eternity-Sky/Github_Proxy" 
-           class="github-link" 
-           target="_blank">
-          <span class="github-icon"></span>
-          GitHub 仓库
-        </a>
+  <div class="footer">
+    <div class="footer-content">
+      <div class="copyright">
+        © 2024 Eternity-sky. All rights reserved.
       </div>
+      <a href="https://github.com/Eternity-Sky/Github_Proxy" 
+         class="github-link" 
+         target="_blank">
+        <span class="github-icon"></span>
+        GitHub 仓库
+      </a>
     </div>
   </div>
 
   <script src="speedtest.js"></script>
   <script>
+    // 定义代理节点列表
+    const proxyNodes = [
+      'gitproxy.click',
+      'ghp.arslantu.xyz',
+      'ghproxy.imciel.com',
+      'gh.monlor.com',
+      'gitproxy.mrhjx.cn',
+      'blfrp.cn',
+      'github.tmby.shop',
+      'gh.tryxd.cn',
+      'moran233.xyz',
+      'fastgit.cc',
+      'github.limoruirui.com',
+      'gh.jasonzeng.dev',
+      'git.speed-ssr.tech',
+      'gh-proxy.com',
+      'gh.xx9527.cn',
+      'gh.zwy.me',
+      'github.xxlab.tech',
+      'gh.idayer.com',
+      'gh.cache.cloudns.org',
+      'ghp.miaostay.com',
+      'ghpr.cc',
+      'github.7boe.top',
+      'gh.nxnow.top',
+      'hub.gitmirror.com',
+      'gh.pylas.xyz',
+      'gh-proxy.ygxz.in',
+      'gh.llkk.cc',
+      'gh.chaoyi996.com',
+      'ghp.ci',
+      'githubapi.jjchizha.com',
+      'gh-proxy.llyke.com',
+      'ql.133.info',
+      'ghproxy.cn',
+      'gh.6yit.com',
+      'ghp.keleyaa.com',
+      'ghproxy.net',
+      'ghproxy.xiaopa.cc',
+      'gh.xxooo.cf',
+      'ghproxy.cc',
+      'gh.catmak.name',
+      'git.669966.xyz',
+      'gh.api.99988866.xyz',
+      'gh.sixyin.com',
+      'proxy.yaoyaoling.net',
+      'gh.hlg.us.kg',
+      'ghproxy.cnproxy.top',
+      'git.40609891.xyz',
+      'github.ednovas.xyz',
+      'ghp.ml1.one',
+      'gp.zkitefly.eu.org',
+      'git.886.be',
+      'ghp.p3terx.com',
+      'gh.qninq.cn',
+      'cccccccccccccccccccccccccccccccccccccccccccccccccccc.cc',
+      'ghproxy.cianogame.top',
+      'ghproxy.1888866.xyz',
+      'mirror.ghproxy.com'
+    ];
+
+    // 初始化下拉框选项
+    function initializeProxySelect() {
+      const select = document.getElementById('proxySelect');
+      select.innerHTML = proxyNodes.map(node => `
+        <option value="${node}">${node}</option>
+      `).join('');
+    }
+
     window.onload = async () => {
+      // 首先初始化下拉框
+      initializeProxySelect();
+      
+      // 然后进行速度测试
       const results = await testAllNodes();
-      // 只更新选择框的选项
+      // 更新选择框的选项，包含延迟信息
       const select = document.getElementById('proxySelect');
       select.innerHTML = results.map(result => `
         <option value="${result.node}">${result.node} - ${result.latency}ms</option>
