@@ -1,65 +1,63 @@
 // GitHub 加速节点列表
 const proxyNodes = [
-    'gh.tryxd.cn',
-    'gitproxy.click',
-    'blfrp.cn',
-    'gh-proxy.ygxz.in',
-    'ghp.keleyaa.com',
-    'hub.gitmirror.com',
-    'gh.nxnow.top',
-    'github.xxlab.tech',
-    'proxy.yaoyaoling.net',
-    'github.moeyy.xyz',
-    'ghp.miaostay.com',
-    'ghp.arslantu.xyz',
-    'fastgit.cc',
-    'github.limoruirui.com',
-    'gh.api.99988866.xyz',
-    'ghproxy.xiaopa.cc',
-    'ghpr.cc',
-    'github.7boe.top',
-    'gh.zwy.me',
-    'ghproxy.cn',
-    'gh.idayer.com',
-    'github.tmby.shop',
-    'git.speed-ssr.tech',
-    'git.886.be',
-    'gh.pylas.xyz',
-    'gh.monlor.com',
-    'gh-proxy.com',
-    'github.ednovas.xyz',
-    'gh.jasonzeng.dev',
-    'gh.6yit.com',
-    'moran233.xyz',
-    'cccccccccccccccccccccccccccccccccccccccccccccccccccc.cc',
-    'gh.xxooo.cf',
-    'ghproxy.imciel.com',
-    'gitproxy.mrhjx.cn',
-    'gh.chaoyi996.com',
-    'ghp.ml1.one',
-    'ghproxy.1888866.xyz',
-    'gh-proxy.llyke.com',
-    'ghproxy.cianogame.top',
-    'ghproxy.cnproxy.top',
-    'ghproxy.cc',
-    'ghp.ci',
-    'mirror.ghproxy.com',
-    'gh.xx9527.cn',
-    'ghproxy.net',
-    'gh.qninq.cn',
-    'gp.zkitefly.eu.org',
-    'gh.llkk.cc',
-    'ghp.p3terx.com',
-    'gh.hlg.us.kg',
-    'git.669966.xyz',
-    'gh.cache.cloudns.org',
-    'gh.catmak.name',
-    'githubapi.jjchizha.com',
-    'gh.ddlc.top',
-    'git.40609891.xyz',
-    'ql.133.info',
-    'gh.sixyin.com'
-  ];
+  'gitproxy.click',
+  'ghp.arslantu.xyz',
+  'ghproxy.imciel.com',
+  'gh.monlor.com',
+  'gitproxy.mrhjx.cn',
+  'blfrp.cn',
+  'github.tmby.shop',
+  'gh.tryxd.cn',
+  'moran233.xyz',
+  'fastgit.cc',
+  'github.limoruirui.com',
+  'gh.jasonzeng.dev',
+  'git.speed-ssr.tech',
+  'gh-proxy.com',
+  'gh.xx9527.cn',
+  'gh.zwy.me',
+  'github.xxlab.tech',
+  'gh.idayer.com',
+  'gh.cache.cloudns.org',
+  'ghp.miaostay.com',
+  'ghpr.cc',
+  'github.7boe.top',
+  'gh.nxnow.top',
+  'hub.gitmirror.com',
+  'gh.pylas.xyz',
+  'gh-proxy.ygxz.in',
+  'gh.llkk.cc',
+  'gh.chaoyi996.com',
+  'ghp.ci',
+  'githubapi.jjchizha.com',
+  'gh-proxy.llyke.com',
+  'ql.133.info',
+  'ghproxy.cn',
+  'gh.6yit.com',
+  'ghp.keleyaa.com',
+  'ghproxy.net',
+  'ghproxy.xiaopa.cc',
+  'gh.xxooo.cf',
+  'ghproxy.cc',
+  'gh.catmak.name',
+  'git.669966.xyz',
+  'gh.api.99988866.xyz',
+  'gh.sixyin.com',
+  'proxy.yaoyaoling.net',
+  'gh.hlg.us.kg',
+  'ghproxy.cnproxy.top',
+  'git.40609891.xyz',
+  'github.ednovas.xyz',
+  'ghp.ml1.one',
+  'gp.zkitefly.eu.org',
+  'git.886.be',
+  'ghp.p3terx.com',
+  'gh.qninq.cn',
+  'cccccccccccccccccccccccccccccccccccccccccccccccccccc.cc',
+  'ghproxy.cianogame.top',
+  'ghproxy.1888866.xyz',
+  'mirror.ghproxy.com'
+];
 
 // 测试单个节点速度
 async function testNode(node) {
@@ -128,6 +126,7 @@ async function testAllNodes() {
   return sortedResults;
 }
 
+// 页面加载时自动测速
 window.onload = async () => {
   const select = document.getElementById('proxySelect');
   // 先填充所有节点
@@ -136,9 +135,5 @@ window.onload = async () => {
   `).join('');
   
   // 然后进行测速
-  const results = await testAllNodes();
-  // 更新节点延迟信息
-  select.innerHTML = results.map(result => `
-    <option value="${result.node}">${result.node} - ${result.latency}ms</option>
-  `).join('');
+  await testAllNodes();
 };
