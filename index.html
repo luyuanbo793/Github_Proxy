@@ -4,6 +4,8 @@
   <title>GitHub 代理</title>
   <link rel="stylesheet" href="styles.css">
   <meta charset="UTF-8">
+  <!-- LeanCloud SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.15.0/dist/av-min.js"></script>
 </head>
 <body>
   <h1 class="title">GitHub 代理</h1>
@@ -36,7 +38,9 @@
 
     <div class="notice">
       重要提示：公共服务，请勿滥用。加速源来自网络收集合，在此感谢每一位分享者。
-      <div id="userCount" style="margin-top: 10px;">已有 0 名用户使用本工具</div>
+      <div id="userCount" style="margin-top: 10px;">
+        已有 <span id="visit-count">-</span> 名用户使用本工具
+      </div>
     </div>
 
     <div class="instructions">
