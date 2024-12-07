@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GitHub 代理</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h1 class="title">GitHub 代理</h1>
+  <div id="results">
+    <div class="header">
+      <div class="logo">GitHub 代理</div>
+      <div class="header-buttons">
+        <a href="https://ghp.keleyaa.com/https://raw.githubusercontent.com/oopsunix/hosts/refs/heads/main/hosts_github" 
+           class="hosts-btn" 
+           target="_blank">
+          Hosts
+        </a>
+        <button class="reaction-btn">反馈</button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <input type="text" placeholder="请贴入来自 GitHub 的链接" />
+      <button class="download-btn">⚡️ 加速下载</button>
+    </div>
+
+    <div class="select-group">
+      <label>加速源:</label>
+      <select id="proxySelect">
+        <option value="gh.tryxd.cn">gh.tryxd.cn</option>
+        <option value="gitproxy.click">gitproxy.click</option>
+        <option value="blfrp.cn">blfrp.cn</option>
+        <option value="gh-proxy.ygxz.in">gh-proxy.ygxz.in</option>
+        <option value="ghp.keleyaa.com">ghp.keleyaa.com</option>
+        <!-- ... 其他节点 ... -->
+      </select>
+      <button class="test-btn">在线节点检测</button>
+    </div>
+
+    <div class="notice">
+      重要提示：公共服务，请勿滥用。加速源来自网络收集合，在此感谢每一位分享者。
+    </div>
+
+    <div class="instructions">
+      <h2>使用说明</h2>
+      <ol>
+        <li>支持GitHub文件、Releases、archive、gist、raw.githubusercontent.com文件下载</li>
+        <li>复制 GitHub 文件的原始链接，粘贴到上方输入框</li>
+        <li>不支持整个项目文件夹的下载</li>
+      </ol>
+      <h2>页面合法输入示例</h2>
+      <ul>
+        <li>
+          <span class="label">原始文件：</span>
+          <a href="https://raw.githubusercontent.com/microsoft/vscode/main/LICENSE.txt" class="example-link">
+            https://raw.githubusercontent.com/microsoft/vscode/main/LICENSE.txt
+          </a>
+        </li>
+        <li>
+          <span class="label">版本来源：</span>
+          <a href="https://github.com/microsoft/vscode/archive/refs/heads/main.zip" class="example-link">
+            https://github.com/microsoft/vscode/archive/refs/heads/main.zip
+          </a>
+        </li>
+        <li>
+          <span class="label">发布文件：</span>
+          <a href="https://github.com/github/gh-ost/releases/download/v1.1.6/gh-ost" class="example-link">
+            https://github.com/github/gh-ost/releases/download/v1.1.6/gh-ost
+          </a>
+        </li>
+        <li>
+          <span class="label">发布源码：</span>
+          <a href="https://github.com/microsoft/vscode/archive/refs/tags/1.82.3.zip" class="example-link">
+            https://github.com/microsoft/vscode/archive/refs/tags/1.82.3.zip
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="speedtest.js"></script>
+  <script>
+    window.onload = async () => {
+      const results = await testAllNodes();
+      // 只更新选择框的选项
+      const select = document.getElementById('proxySelect');
+      select.innerHTML = results.map(result => `
+        <option value="${result.node}">${result.node} - ${result.latency}ms</option>
+      `).join('');
+    };
+    
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('test-btn')) {
+        testAllNodes().then(results => {
+          const select = document.getElementById('proxySelect');
+          select.innerHTML = results.map(result => `
+            <option value="${result.node}">${result.node} - ${result.latency}ms</option>
+          `).join('');
+        });
+      }
+      if (e.target.classList.contains('download-btn')) {
+        const input = document.querySelector('.input-group input');
+        const select = document.getElementById('proxySelect');
+        if (input.value && select.value) {
+          const proxyUrl = `https://${select.value}/${input.value}`;
+          window.open(proxyUrl);
+        }
+      }
+    });
+  </script>
+</body>
+</html> 
