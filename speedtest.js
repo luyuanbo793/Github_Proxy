@@ -143,5 +143,10 @@ document.addEventListener('click', (e) => {
       `).join('');
     });
   }
+  if (e.target.classList.contains('reaction-btn')) {
+    window.open('https://github.com/Eternity-Sky/Github_Proxy/issues', '_blank');
+  }
   // ... 其他代码保持不变
 });
+
+</```rewritten_file>
