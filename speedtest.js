@@ -1,3 +1,36 @@
+// 在文件开头添加计数器相关函数
+async function initializeCounter() {
+  try {
+    // 先尝试创建计数器（如果不存在）
+    await fetch('https://api.countapi.xyz/create?namespace=github-proxy-tool&key=downloads&value=0');
+    
+    // 然后获取当前值
+    const response = await fetch('https://api.countapi.xyz/get/github-proxy-tool/downloads');
+    const data = await response.json();
+    updateCounterDisplay(data.value);
+  } catch (error) {
+    console.error('获取计数失败:', error);
+    updateCounterDisplay(0);
+  }
+}
+
+async function incrementCounter() {
+  try {
+    const response = await fetch('https://api.countapi.xyz/hit/github-proxy-tool/downloads');
+    const data = await response.json();
+    updateCounterDisplay(data.value);
+  } catch (error) {
+    console.error('更新计数失败:', error);
+  }
+}
+
+function updateCounterDisplay(count) {
+  const countElement = document.getElementById('userCount');
+  if (countElement) {
+    countElement.textContent = `已有 ${count.toLocaleString()} 名用户使用本工具`;
+  }
+}
+
 // GitHub 加速节点列表
 const proxyNodes = [
   'gitproxy.click',
@@ -146,7 +179,19 @@ document.addEventListener('click', (e) => {
   if (e.target.classList.contains('reaction-btn')) {
     window.open('https://github.com/Eternity-Sky/Github_Proxy/issues', '_blank');
   }
+  if (e.target.classList.contains('download-btn')) {
+    const input = document.querySelector('.input-group input');
+    const select = document.getElementById('proxySelect');
+    if (input.value && select.value) {
+      const proxyUrl = `https://${select.value}/${input.value}`;
+      window.open(proxyUrl);
+      incrementCounter(); // 增加计数
+    }
+  }
   // ... 其他代码保持不变
 });
 
-</```rewritten_file>
+// 在页面加载时初始化计数器
+window.addEventListener('load', () => {
+  initializeCounter();
+});
